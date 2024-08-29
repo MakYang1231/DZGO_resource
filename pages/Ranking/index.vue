@@ -55,29 +55,31 @@ if (JSON.stringify(newData) !== JSON.stringify(items.value)) {
 }
 }
 
+let wss;
 onMounted(() => {
-fetchData(); // 初次加载时获取数据
-// 只在客户端执行
-if (process.client) {
-  const eventSource = new EventSource('/DZGZ_web/api/sse');
+  fetchData(); // 初次加载时获取数据
 
-  eventSource.onmessage = (event) => {
-    const message = JSON.parse(event.data);
-    console.log('client sse re ok');
-    if (message.type === 'webhook-update') {
-      console.log('Webhook update received:', message.data);
-      fetchData(); // 收到 Webhook 更新时重新 fetch API 数据
-    }
-  };
+  // 只在客户端执行
+  if (process.client) {
+    const eventSource = new EventSource('/DZGZ_web/api/sse');
 
-  eventSource.onerror = (error) => {
-    console.error('SSE Error:', error);
-  };
-}
+    eventSource.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      console.log('client sse re ok');
+      if (message.type === 'webhook-update') {
+        console.log('Webhook update received:', message.data);
+        fetchData(); // 收到 Webhook 更新时重新 fetch API 数据
+      }
+    };
+
+    eventSource.onerror = (error) => {
+      console.error('SSE Error:', error);
+    };
+  }
 });
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .list-item {
     display: block;
     transition: all 1s ease;
