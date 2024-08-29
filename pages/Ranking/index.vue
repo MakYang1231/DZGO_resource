@@ -57,7 +57,7 @@ if (JSON.stringify(newData) !== JSON.stringify(items.value)) {
 
 onMounted(() => {
 fetchData(); // 初次加载时获取数据
-
+｀
 // 只在客户端执行
 if (process.client) {
   const eventSource = new EventSource('/DZGZ_web/api/sse');
