@@ -1,24 +1,47 @@
 <template>
   <NuxtLayout name="custom-layout">
       <div class="main">
-          <transition-group name="list" tag="ul" class="list">
-            <li class="list-item" v-for="(item, index) in sortedItems" :key="item.user_id" :style="{ order: item.user_rank }">
-              <div class="firstInfo d-flex align-items-baseline justify-content-around">
-                <div class="icon">
-                    <NuxtImg v-if="index === 0" class="lazyload" itemprop="image" src="images/ranking/1_rank.png" data-src="public/images/ranking/1_ranking.png" />
-                    <NuxtImg v-else-if="index === 1" class="lazyload" itemprop="image" src="images/ranking/2_rank.png" data-src="public/images/ranking/2_ranking.png" /> 
-                    <NuxtImg v-else-if="index === 2" class="lazyload" itemprop="image" src="images/ranking/3_rank.png" data-src="public/images/ranking/3_ranking.png" /> 
-                    <NuxtImg v-else class="lazyload" itemprop="image" src="images/ranking/4_rank.png" data-src="public/images/ranking/4_ranking.png" />  
-                </div>
-                <div class="picture">
+          <div class="topImage">
+              <img src="/images/main/1037089_0.jpg" alt="">
+          </div>
+          <div class="storeItem">
+              <div class="item" :class="{ active: selectedStore === 'shilin' }" @click="fetchData('shilin')">士林店</div>
+              <div class="item" :class="{ active: selectedStore === 'sanhe' }" @click="fetchData('sanhe')">三和店</div>
+          </div>
+          <ul class="list list-group font-weight-bold">
+            <li class="list-item list-group-item">
+              <div class="flex1_center">排名</div>
+              <div class="flex1_center">頭像</div>
+              <div class="flex2_center">人名/戰力值</div>
+              <div class="flex1_center">財富值</div>
+              <div class="flex1_center">衝榜</div>
+            </li>
+          </ul>
+          <transition-group name="list" tag="ul" class="list list-group">
+            <li class="list-item list-group-item" v-for="(item, index) in sortedItems" :key="item.user_id" :style="{ order: item.user_rank }">
+                  <div class="d-flex justify-content-center flex1_center">
+                    <div class="number">${index+1}</div>
+                  </div>
+                  <div class="picture flex1_center">
                     <NuxtImg class="lazyload" itemprop="image" :src="`${ item.user_picture }`" :data-src="`${ item.user_picture }`" /> 
                 </div>
-              </div>
-              <div class="midInfo">
-                  <div class="name">${item.user_name}</div>
-                  <div class="message">${item.user_id}</div>
-              </div>
-              <div class="point">${ formatNumber(item.user_fight_point) }</div>
+                <div class="info flex2_center">
+                  <div class="name">${ item.user_name }</div>
+                  <div class="point">
+                      <div class="text">戰力值</div>
+                      <countTo :startVal="0" :endVal="item.user_fight_point" :duration="2000" separator="," />
+                      <!-- ${ formatNumber(item.user_fight_point) } -->
+                  </div>
+                </div>
+                <div class="title flex1_center">
+                      <div v-if="item.user_wealth_title === '薄有積蓄'" class="title_default title_silver">薄有積蓄</div>
+                      <div v-else-if="item.user_wealth_title === '小有成就'" class="title_default title_gold">小有成就</div>
+                      <div v-else-if="item.user_wealth_title === '生財有道'" class="title_default title_three">生財有道</div>
+                      <div v-else class="title_default title_copper">白手起家</div>
+                </div>
+                <div class="icon flex1_center">
+                  <NuxtImg v-if="item.user_rank_up_indicator === true" class="lazyload" itemprop="image" src="images/ranking/up.png" data-src="public/images/ranking/1_ranking.png" /> 
+                </div>
             </li>
           </transition-group>
       </div>
@@ -31,19 +54,22 @@
   });
 
   const items = ref([]);
+  const selectedStore = ref('shilin')
 
   // Sorted list based on rank
   const sortedItems = computed(() => {
-  console.log(items.value);
   return items.value.slice().sort((a, b) => b.user_fight_point - a.user_fight_point);
   });
 
-async function fetchData() {
+async function fetchData(store) {
+  selectedStore.value = store;
 try {
-  const response = await $fetch('https://isnmk.com/point/rank_api_test');
-  console.log(response.day_rank);
-  updateRankings(response.day_rank);
-  console.log('update');
+  const response = await $fetch('https://isnmk.com/point/rank_api');
+  if (store === 'shilin') {
+    updateRankings(response.shilin);
+  } else if (store === 'sanhe') {
+    updateRankings(response.sanhe);
+  }
 } catch (error) {
   console.error('Error fetching data:', error);
 }
@@ -57,10 +83,10 @@ if (JSON.stringify(newData) !== JSON.stringify(items.value)) {
 
 let wss;
 onMounted(() => {
-fetchData(); // 初次加载时获取数据
+fetchData('shilin'); // 初次加载时获取数据
 
   // Connect to WebSocket server
-  wss = new WebSocket('wss://ismark.club/chat/');
+  wss = new WebSocket('wss://isnmk.com/websocket/ranking/');
   console.log(wss);
 
   wss.onopen = function(event) {
@@ -71,7 +97,8 @@ fetchData(); // 初次加载时获取数据
   wss.onmessage = (event) => {
     console.log('WebSocket message received:', event.data);
     // Trigger API refresh when WebSocket message is received
-    fetchData();
+    console.log(selectedStore.value);
+    fetchData(selectedStore.value);
   };
 
   wss.onerror = (error) => {
@@ -103,243 +130,158 @@ onUnmounted(() => {
     opacity: 0;
     transform: translateY(-10px);
   }
+
+  .font-weight-bold {
+    font-weight: 700;
+  }
   .main {
       width: 100%;
-      background-image: url(public/images/ranking/ranking_background.jpg);
-      background-position: center center;
-      background-size: cover;
-      background-attachment: fixed;
+      background-color: #f1f1f1;
+      color: #252526;
+      padding-bottom: 1rem;
+
+      .storeItem {
+          margin: .5rem 0;
+          display: flex;
+          align-items: center;
+          justify-content: space-evenly;
+
+          .item {
+              font-size: 1.4rem;
+              font-weight: 300;
+          }
+          .active {
+              font-size: 1.8rem;
+              color: #e21111;
+          }
+      }
 
       .list {
-          padding-top: 1svh;
-          width: 95%;
+          background-color: var(--WEB_main_color);
           margin: 0 auto;
-          border-radius: 5px;
+          border-radius: 20px;
+          width: 95%;
 
           .list-item {
-              margin-top: 1svh;
-              background-color: rgba(255, 255, 255, .8);
               display: flex;
-              justify-content: space-between;
+              justify-content: space-around;
               align-items: center;
-              flex-wrap: nowrap;
-              border-radius: 10px;
-              height: 6svh;
+              padding-top: 1rem;
+              border-bottom: 1px solid #f1f1f1;
 
-              .icon {
-                  width: 6svh;
-                  height: 6svh;
+              .flex1_center {
+                flex: 1;
+                text-align: center;
               }
-              .picture {
-                  width: 3svh;
-                  height: 3svh;
+              .flex2_center {
+                flex: 2;
+                text-align: center;
+              }              
 
-                  img {
-                      border-radius: 50%;
-                  }
-              }
-
-              .firstInfo{
-                  flex-basis: 20%;
-              }
-              .midInfo {
-                  flex-basis: 50%;
+              .number {
+                  position: relative;
+                  background-color: #fbe7e9;
+                  width: 1rem;
+                  height: calc(1rem * cos(30deg) * 2);
                   display: flex;
-                  justify-content: start;
                   align-items: center;
-
-                  .name {
-                      padding-right: 1rem;
-                      font-size: 24px;
-                  }
-                  .message {
-                      font-size: 18px;
-                      display: -webkit-box;
-                      -webkit-box-orient: vertical;
-                      -webkit-line-clamp: 3;
-                      overflow: hidden;
-                  }
+                  justify-content: center;
               }
-
-              .point {
-                  flex-basis: 20%;
-                  padding: 2rem;
-                  font-size: 28px;
-                  font-family: "Josefin Sans", sans-serif;
-                  color : #e21111;
+              .number::after {
+                  position: absolute;
+                  content: "";
+                  left: 0;
+                  top: 0;
+                  width: 0;
+                  height: 0;
+                  border: .5rem solid transparent;
+                  border-top-width: calc((1rem * cos(30deg) * 2) / 2);
+                  border-bottom-width: calc((1rem * cos(30deg) * 2) / 2);
+                  border-right-color: #fbe7e9;
+                  transform: translate(-100%);
               }
-          }
-          .list-item:nth-child(1) {
-              margin-top: 1svh;
-              background-color: rgba(255, 255, 255, .8);
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              flex-wrap: nowrap;
-              border-radius: 10px;
-              height: 20svh;
-
-              .icon {
-                  width: 20svh;
-                  height: 20svh;
+              .number::before {
+                  position: absolute;
+                  content: "";
+                  left: 0;
+                  top: 0;
+                  width: 0;
+                  height: 0;
+                  border: .5rem solid transparent;
+                  border-top-width: calc((1rem * cos(30deg) * 2) / 2);
+                  border-bottom-width: calc((1rem * cos(30deg) * 2) / 2);
+                  border-left-color: #fbe7e9;
+                  transform: translate(100%);                    
               }
               .picture {
-                  width: 18svh;
-                  height: 18svh;
-
-                  img {
+                  img{
+                      width: 3rem;
+                      height: 3rem;
                       border-radius: 50%;
                   }
               }
 
-              .midInfo {
-                  flex-basis: 50%;
-
+              .info {
                   .name {
-                      font-size: 24px;
-                  }
-                  .message {
-                      font-size: 18px;
+                      font-size: 1.2rem;
                       display: -webkit-box;
-                      -webkit-box-orient: vertical;
-                      -webkit-line-clamp: 3;
                       overflow: hidden;
-                  }
-              }
-
-              .point {
-                  padding: 2rem;
-                  font-size: 50px;
-                  font-family: "Josefin Sans", sans-serif;
-                  color : #e21111;
-              }
-          }
-          .list-item:nth-child(2) {
-              margin-top: 1svh;
-              background-color: rgba(255, 255, 255, .8);
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              flex-wrap: nowrap;
-              border-radius: 10px;
-              height: 15svh;
-
-              .icon {
-                  width: 15svh;
-                  height: 15svh;
-              }
-              .picture {
-                  width: 13svh;
-                  height: 13svh;
-
-                  img {
-                      border-radius: 50%;
-                  }
-              }
-
-              .midInfo {
-                  flex-basis: 50%;
-
-                  .name {
-                      font-size: 24px;
-                  }
-                  .message {
-                      font-size: 18px;
-                      display: -webkit-box;
+                      -webkit-line-clamp: 1;
                       -webkit-box-orient: vertical;
-                      -webkit-line-clamp: 3;
-                      overflow: hidden;
+                  }
+                  .point{
+                      display: flex;
+                      align-items: baseline;
+                      justify-content: center;
+                      color: #ee4d2d;
+                      font-size: 1.2rem;
+
+                      .text{
+                          color: #9d9d9d;
+                          font-size: 1rem;
+                          margin-right: .5rem
+                      }
+                  } 
+              }
+
+              .title {
+                  .title_default {
+                      background: linear-gradient(to bottom right, #451c01, #b5750e);
+                      color: snow;
+                      padding: .25rem;
+                      font-size: 0.7rem;
+                      border-radius: 5px;
+                      width: fit-content;
+                      margin: 0 auto;
+                  }
+                  .title_three {
+                      background: linear-gradient(to bottom right, #7f7cbc, #dde2e8);
+                  }
+                  .title_two {
+                      background: linear-gradient(to bottom right, #132360, #4f84d7);
+                  }
+                  .title_one {
+                      background: linear-gradient(to bottom right, #d3b66f, #8a50d0);
+                  }
+                  .title_copper {
+                      background: linear-gradient(to bottom right, #edaa00, #873324);
+                  }
+                  .title_silver {
+                      background: linear-gradient(to bottom right, #c5c5c5, #606060);
+                  }
+                  .title_gold {
+                      background: linear-gradient(to bottom right, #fff347, #ff8c56);
+                  }
+                  .title_diamond {
+                      background: linear-gradient(to bottom right, #d3b66f, #8a50d0);
                   }
               }
 
-              .point {
-                  padding: 2rem;
-                  font-size: 46px;
-                  font-family: "Josefin Sans", sans-serif;
-                  color : #e21111;
-              }
-          } 
-          .list-item:nth-child(3) {
-              margin-top: 1svh;
-              background-color: rgba(255, 255, 255, .8);
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              flex-wrap: nowrap;
-              border-radius: 10px;
-              height: 10svh;
-
-              .icon {
-                  width: 10svh;
-                  height: 10svh;
-              }
-              .picture {
-                  width: 8svh;
-                  height: 8svh;
-
-                  img {
-                      border-radius: 50%;
-                  }
-              }
-
-              .midInfo {
-                  flex-basis: 50%;
-
-                  .name {
-                      font-size: 24px;
-                  }
-                  .message {
-                      font-size: 18px;
-                      display: -webkit-box;
-                      -webkit-box-orient: vertical;
-                      -webkit-line-clamp: 3;
-                      overflow: hidden;
-                  }
-              }
-
-              .point {
-                  padding: 2rem;
-                  font-size: 42px;
-                  font-family: "Josefin Sans", sans-serif;
-                  color : #e21111;
-              }
-          }                                    
-      }
-  }
-
-@media screen and (max-width: 767px) {
-  .main {
-      .list {
-          .list-item {
-            display: block;
-            transition: transform 1s ease;
-            position: relative;
-            
-              .icon {
-                  width: 7svh !important;
-                  height: 7svh !important;
-              }
-              .picture {
-                  width: 3vh !important;
-                  height: 3vh !important;
-              }
-
-              .midInfo {
-                  margin-left: 1rem;
-                  .name {
-                      font-size: 16px;
-                  }
-                  .message {
-                      font-size: 14px;
-                  }
-              }
-
-              .point {
-                  font-size: 24px;
+              .icon img{
+                  width: 2rem;
+                  height: 2rem;
               }
           }
       }
   }
-}    
 </style>
-

@@ -10,7 +10,7 @@
                 </NuxtLink>
                 </div>
             <div class="main_item d-flex flex-column align-items-center">   
-                <div class="item_top" ref="DOM_Header_mitem_top">士林夜市即時戰力榜</div>
+                <div class="item_top" ref="DOM_Header_mitem_top">即時戰力榜</div>
             </div>     
             <div class="toolItem d-flex align-items-center justify-content-around">
                 <div class="item search">
@@ -26,11 +26,11 @@
         </div>
     </header>
     <slot />
-    <footer class="Footer_root">
+    <!-- <footer class="Footer_root">
         <div class="bg-warning d-flex align-items-center justify-content-center mt-5">
             FOOTER
         </div>
-    </footer>
+    </footer> -->
 
     <!-- Menu content div -->
     <transition name="Menufade">    
