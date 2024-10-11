@@ -1,10 +1,10 @@
 <template>
-    <header class="Header_root  nav_height sticky-top" ref="DOM_Header_root">
-        <div class="Head_content nav_height d-flex align-items-center justify-content-around">
+    <header class="Header_root" ref="DOM_Header_root">
+        <div class="Head_content d-flex align-items-center justify-content-end">
             <div class="menu_button" @click="openMenu();">
                     <BootstrapIcon name="list" />
             </div>
-            <div class="logo d-flex align-items-center justify-content-around" ref="DOM_Header_logo">
+            <div class="logo d-none align-items-center justify-content-around" ref="DOM_Header_logo">
                 <NuxtLink :to="`/`">
                     <NuxtImg class="lazyload" itemprop="image" :src="`images/logo/DZGZ_logo.png`" :data-src="`images/logo/DZGZ_logo.png`" :title="`彈珠菓子_LOGO`" :alt="`彈珠菓子_LOGO`" />
                 </NuxtLink>
@@ -165,6 +165,8 @@ const MenuItemsData: any = $MenuItemsData;
     background-color: var(--WEB_main_color);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     transition: all 0.3s ease-in-out;
+    position: relative;
+    background: url(../images/ranking/bg_3.png) 100% / cover no-repeat fixed;
 
     .Head_content {
         padding: 0 0.5rem;
@@ -179,12 +181,13 @@ const MenuItemsData: any = $MenuItemsData;
             transition: all 0.3s ease-in-out;
         }
         .main_item {
-            flex-basis: 70%;
+            flex-basis: 90%;
             .item_top {
                 transition: all 0.3s ease-in-out;
-                font-family: "ＫＯさきがけ龍爪Ｍ";
-                letter-spacing: 1rem;
-                font-size: 1.1rem;
+                font-family: "Reggae One","ＫＯさきがけ龍爪Ｍ";
+                letter-spacing: 3rem;
+                font-size: 6rem;
+                text-align: center;
             }
             .item_top {
                 display: block !important;
@@ -392,8 +395,7 @@ const MenuItemsData: any = $MenuItemsData;
             }
         }
     }    
-
-// [ Media screen]   
+   
     .Header_root {
         display: block;
         .Head_content {
@@ -405,14 +407,24 @@ const MenuItemsData: any = $MenuItemsData;
             }
             .main_item {
                 display: block !important;
-
-                .item_top {
-                    letter-spacing: .5rem;
-                }
             }
         }
     }
 
+// [ Media screen]
+@media screen and (max-width: 767px) {
+    // 變數
+    .Header_root {
+        .Head_content {
+            .main_item {
+                .item_top {
+                    letter-spacing: .5rem;
+                    font-size: 1.1rem;
+                }
+            }
+        }    
+    }    
+}
 
 // [ Animation init ]
     

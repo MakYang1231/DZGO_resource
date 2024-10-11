@@ -1,14 +1,14 @@
 <template>
   <NuxtLayout name="custom-layout">
       <div class="main">
-          <div class="topImage">
+          <!-- <div class="topImage">
               <img src="/images/main/1037089_0.jpg" alt="">
-          </div>
+          </div> -->
           <div class="storeItem">
               <div class="item" :class="{ active: selectedStore === 'shilin' }" @click="fetchData('shilin')">士林店</div>
               <div class="item" :class="{ active: selectedStore === 'sanhe' }" @click="fetchData('sanhe')">三和店</div>
           </div>
-          <ul class="list list-group font-weight-bold">
+          <ul class="list list-group font-weight-bold list-header">
             <li class="list-item list-group-item">
               <div class="flex1_center">排名</div>
               <div class="flex1_center">頭像</div>
@@ -36,11 +36,11 @@
                 <div class="title flex1_center">
                       <div v-if="item.user_wealth_title === '薄有積蓄'" class="title_default title_silver">薄有積蓄</div>
                       <div v-else-if="item.user_wealth_title === '小有成就'" class="title_default title_gold">小有成就</div>
-                      <div v-else-if="item.user_wealth_title === '生財有道'" class="title_default title_three">生財有道</div>
+                      <div v-else-if="item.user_wealth_title === '生財有道'" class="title_default title_diamond">生財有道</div>
                       <div v-else class="title_default title_copper">白手起家</div>
                 </div>
                 <div class="icon flex1_center">
-                  <NuxtImg v-if="item.user_rank_up_indicator === true" class="lazyload" itemprop="image" src="images/ranking/up.png" data-src="public/images/ranking/1_ranking.png" /> 
+                  <img v-if="item.user_rank_up_indicator === true" class="lazyload" itemprop="image" src="/images/ranking/up.png" data-src="images/ranking/up.png" /> 
                 </div>
             </li>
           </transition-group>
@@ -159,7 +159,6 @@ onUnmounted(() => {
       .list {
           background-color: var(--WEB_main_color);
           margin: 0 auto;
-          border-radius: 20px;
           width: 95%;
 
           .list-item {
@@ -273,7 +272,7 @@ onUnmounted(() => {
                       background: linear-gradient(to bottom right, #fff347, #ff8c56);
                   }
                   .title_diamond {
-                      background: linear-gradient(to bottom right, #d3b66f, #8a50d0);
+                      background: linear-gradient(to bottom right, #2f25ea, #c6c8e4);
                   }
               }
 
@@ -282,6 +281,12 @@ onUnmounted(() => {
                   height: 2rem;
               }
           }
+      }
+
+      .list-header{
+        position: sticky;
+        top: var(--WEB_custom_nav_height);
+        z-index: 1024;
       }
   }
 </style>

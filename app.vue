@@ -11,4 +11,8 @@
 .wrapper {
   background-color: var(--WEB_main_color);
 }
+
+.nuxt-devtools-panel {
+  display: none !important;
+}
 </style>
