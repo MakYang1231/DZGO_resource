@@ -10,11 +10,11 @@
             </div>
             <ul class="list list-group font-weight-bold list-header">
               <li class="list-item list-group-item">
-                <div class="flex1_center">排名</div>
+                <div class="flex1_center">今日排名</div>
                 <div class="flex1_center">頭像</div>
                 <div class="flex2_center">人名/戰力值</div>
                 <div class="flex1_center">財富值</div>
-                <div class="flex1_center">衝榜</div>
+                <div class="flex1_center">累積排位</div>
               </li>
             </ul>
             <transition-group name="list" tag="ul" class="list list-group">
@@ -34,13 +34,19 @@
                     </div>
                   </div>
                   <div class="title flex1_center">
-                        <div v-if="item.user_wealth_title === '薄有積蓄'" class="title_default title_silver">薄有積蓄</div>
-                        <div v-else-if="item.user_wealth_title === '小有成就'" class="title_default title_gold">小有成就</div>
-                        <div v-else-if="item.user_wealth_title === '生財有道'" class="title_default title_diamond">生財有道</div>
-                        <div v-else class="title_default title_copper">白手起家</div>
+                        <div v-if="item.user_wealth_title === '薄有積蓄'" class="title_gray_50">薄有積蓄</div>
+                        <div v-else-if="item.user_wealth_title === '小有成就'" class="title_gray_75">小有成就</div>
+                        <div v-else-if="item.user_wealth_title === '生財有道'" class="title_dark">生財有道</div>
+                        <div v-else class="title_default title_gray_25">白手起家</div>
                   </div>
-                  <div class="icon flex1_center">
+                  <!-- <div class="icon flex1_center">
                     <img v-if="item.user_rank_up_indicator === true" class="lazyload" itemprop="image" src="/images/ranking/up.png" data-src="images/ranking/up.png" /> 
+                  </div> -->
+                  <div class="icon flex1_center">
+                    <img v-if="item.user_medal === 2" class="lazyload" itemprop="image" src="/images/ranking/medal_silver.png" data-src="/images/ranking/medal_silver.png" /> 
+                    <img v-else-if="item.user_medal === 3" class="lazyload" itemprop="image" src="/images/ranking/medal_gold.png" data-src="images/ranking/medal_gold.png" /> 
+                    <img v-else-if="item.user_medal === 4" class="lazyload" itemprop="image" src="/images/ranking/medal_diamond.png" data-src="images/ranking/medal_diamond.png" /> 
+                    <img v-else class="lazyload" itemprop="image" src="/images/ranking/medal_copper.png" data-src="images/ranking/medal_copper.png"/> 
                   </div>
               </li>
             </transition-group>
@@ -146,7 +152,8 @@
         background-color: #f1f1f1;
         color: #252526;
         padding-bottom: 1rem;
-        background: url(../images/ranking/bg_3.png) 100% / cover no-repeat fixed;
+        padding-top: 3rem;
+        //background: url(../images/ranking/bg_3.png) center / cover no-repeat fixed;
   
         .storeItem {
             margin: .5rem 0;
@@ -165,7 +172,7 @@
         }
   
         .list {
-            background-color: inherit;
+            background-color: var(--WEB_main_color);
             margin: 0 auto;
             width: 95%;
   
@@ -173,29 +180,33 @@
                 display: flex;
                 justify-content: space-around;
                 align-items: center;
-                padding-top: 1rem;
+                padding-top: 0.1rem;
+                padding-bottom: 0.1rem;
                 border-bottom: 1px solid #f1f1f1;
-                background-color: inherit;
+                //background-color: inherit;
   
                 .flex1_center {
                   flex: 1;
                   text-align: center;
+                  font-size: 2rem;
                 }
                 .flex2_center {
                   flex: 2;
                   text-align: center;
+                  font-size: 2rem;
                 }              
   
                 .number {
                     position: relative;
-                    background-color: #fbe7e9;
+                    //background-color: #fbe7e9;
                     width: 1rem;
                     height: calc(1rem * cos(30deg) * 2);
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                    font-size: 2rem;
                 }
-                .number::after {
+                .--number::after {
                     position: absolute;
                     content: "";
                     left: 0;
@@ -208,7 +219,7 @@
                     border-right-color: #fbe7e9;
                     transform: translate(-100%);
                 }
-                .number::before {
+                .--number::before {
                     position: absolute;
                     content: "";
                     left: 0;
@@ -223,15 +234,15 @@
                 }
                 .picture {
                     img{
-                        width: 3rem;
-                        height: 3rem;
+                        width: 8.5rem;
+                        height: 8.5rem;
                         border-radius: 50%;
                     }
                 }
   
                 .info {
                     .name {
-                        font-size: 1.2rem;
+                        font-size: 2rem;
                         display: -webkit-box;
                         overflow: hidden;
                         -webkit-line-clamp: 1;
@@ -242,11 +253,11 @@
                         align-items: baseline;
                         justify-content: center;
                         color: #ee4d2d;
-                        font-size: 1.2rem;
+                        font-size: 1.4rem;
   
                         .text{
                             color: #9d9d9d;
-                            font-size: 1rem;
+                            font-size: 1.4rem;
                             margin-right: .5rem
                         }
                     } 
@@ -254,10 +265,9 @@
   
                 .title {
                     .title_default {
-                        background: linear-gradient(to bottom right, #451c01, #b5750e);
                         color: snow;
                         padding: .25rem;
-                        font-size: 0.7rem;
+                        font-size: 2.0rem;
                         border-radius: 5px;
                         width: fit-content;
                         margin: 0 auto;
@@ -283,18 +293,30 @@
                     .title_diamond {
                         background: linear-gradient(to bottom right, #2f25ea, #c6c8e4);
                     }
+                    .title_gray_25 {
+                        color: #BFBFBF;
+                    }
+                    .title_gray_50 {
+                        color: #A3A3A3;
+                    }                    
+                    .title_gray_75 {
+                        color: #5B5B5B;
+                    }                    
+                    .title_dark {
+                        color: #000000;
+                    }
                 }
   
                 .icon img{
-                    width: 2rem;
-                    height: 2rem;
+                    width: 8.5rem;
+                    height: 8.5rem;
                 }
             }
         }
   
         .list-header{
           position: sticky;
-          top: var(--WEB_custom_nav_height);
+          top: 0;
           z-index: 1024;
         }
     }

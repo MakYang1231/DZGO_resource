@@ -1,12 +1,12 @@
 <template>
     <header class="Header_root" ref="DOM_Header_root">
-        <div class="Head_content d-flex align-items-center justify-content-end">
+        <div class="Head_content d-flex align-items-center justify-content-center">
             <div class="menu_button" @click="openMenu();">
                     <BootstrapIcon name="list" />
             </div>
             <div class="logo d-none align-items-center justify-content-around" ref="DOM_Header_logo">
                 <NuxtLink :to="`/`">
-                    <NuxtImg class="lazyload" itemprop="image" :src="`images/logo/DZGZ_logo.png`" :data-src="`images/logo/DZGZ_logo.png`" :title="`彈珠菓子_LOGO`" :alt="`彈珠菓子_LOGO`" />
+                    <img class="lazyload" itemprop="image" :src="`images/logo/DZGZ_logo.png`" :data-src="`images/logo/DZGZ_logo.png`" :title="`彈珠菓子_LOGO`" :alt="`彈珠菓子_LOGO`" />
                 </NuxtLink>
                 </div>
             <div class="main_item d-flex flex-column align-items-center">   
@@ -55,7 +55,7 @@
                                             <div class="MainNav_Cat_Head" :id="`MainNav_Cat_Head_${index}`">
                                                 <NuxtLink :to="`/${item.category_url}`" class="d-flex align-items-center justify-content-center" @click="closeMenu();" type="button">
                                                     <div class="preIcon">
-                                                        <NuxtImg class="lazyload" itemprop="image" :src="`/images/Header/${ item.category_url }.png`" :data-src="`/images/Header/${ item.category_url }.png`" :title="`Menu_icon_${item.category_url}`" :alt="`Menu_icon_${item.category_url}`" />
+                                                        <img class="lazyload" itemprop="image" :src="`../images/Header/${ item.category_url }.png`" :data-src="`/images/Header/${ item.category_url }.png`" :title="`Menu_icon_${item.category_url}`" :alt="`Menu_icon_${item.category_url}`" />
                                                     </div>
                                                     ${ item.category_name }
                                                 </NuxtLink>
@@ -73,7 +73,7 @@
                                             <div class="MainNav_Cat_Head" :id="`MainNav_Cat_Head_${index}`">
                                                 <NuxtLink :to="`/${item.category_url}`" class="d-flex align-items-center justify-content-center" @click="closeMenu();" type="button">
                                                     <div class="preIcon">
-                                                        <NuxtImg class="lazyload" itemprop="image" :src="`/images/Header/${ item.category_url }.png`" :data-src="`/images/Header/${ item.category_url }.png`" :title="`Menu_icon_${item.category_url}`" :alt="`Menu_icon_${item.category_url}`" />
+                                                        <img class="lazyload" itemprop="image" :src="`../images/Header/${ item.category_url }.png`" :data-src="`/images/Header/${ item.category_url }.png`" :title="`Menu_icon_${item.category_url}`" :alt="`Menu_icon_${item.category_url}`" />
                                                     </div>
                                                     ${ item.category_name }
                                                 </NuxtLink>
@@ -166,7 +166,8 @@ const MenuItemsData: any = $MenuItemsData;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     transition: all 0.3s ease-in-out;
     position: relative;
-    background: url(../images/ranking/bg_3.png) 100% / cover no-repeat fixed;
+    height: fit-content;
+    //background: url(../images/ranking/bg_3.png) 100% / cover no-repeat fixed;
 
     .Head_content {
         padding: 0 0.5rem;
@@ -185,8 +186,8 @@ const MenuItemsData: any = $MenuItemsData;
             .item_top {
                 transition: all 0.3s ease-in-out;
                 font-family: "Reggae One","ＫＯさきがけ龍爪Ｍ";
-                letter-spacing: 3rem;
-                font-size: 6rem;
+                letter-spacing: 0rem;
+                font-size: 10rem;
                 text-align: center;
             }
             .item_top {
@@ -402,9 +403,6 @@ const MenuItemsData: any = $MenuItemsData;
             .logo{
                 width: 7svh;
             }
-            .menu_button {
-                display: block;
-            }
             .main_item {
                 display: block !important;
             }
@@ -415,7 +413,11 @@ const MenuItemsData: any = $MenuItemsData;
 @media screen and (max-width: 767px) {
     // 變數
     .Header_root {
+        height: unset;
         .Head_content {
+            .menu_button {
+                display: block;
+            }
             .main_item {
                 .item_top {
                     letter-spacing: .5rem;
