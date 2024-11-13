@@ -6,11 +6,12 @@
             </div>
             <div class="logo d-none align-items-center justify-content-around" ref="DOM_Header_logo">
                 <NuxtLink :to="`/`">
-                    <img class="lazyload" itemprop="image" :src="`images/logo/DZGZ_logo.png`" :data-src="`images/logo/DZGZ_logo.png`" :title="`彈珠菓子_LOGO`" :alt="`彈珠菓子_LOGO`" />
+                    <img class="lazyload" itemprop="image" :src="`../images/logo/DZGZ_logo.png`" :data-src="`../images/logo/DZGZ_logo.png`" :title="`彈珠菓子_LOGO`" :alt="`彈珠菓子_LOGO`" />
                 </NuxtLink>
                 </div>
-            <div class="main_item d-flex flex-column align-items-center">   
-                <div class="item_top" ref="DOM_Header_mitem_top">即時戰力榜</div>
+            <div class="main_item d-flex flex-column align-items-center">
+                <div v-if=marqueeData.marquee @animationend="handleAnimationEnd" class="item_top top_marquee" ref="DOM_Header_mitem_top_marquee">${ marqueeData.text }</div>
+                <div v-else class="item_top top_default" ref="DOM_Header_mitem_top_default">${ default_titleData.text }</div>   
             </div>     
             <div class="toolItem d-flex align-items-center justify-content-around">
                 <div class="item search">
@@ -55,7 +56,7 @@
                                             <div class="MainNav_Cat_Head" :id="`MainNav_Cat_Head_${index}`">
                                                 <NuxtLink :to="`/${item.category_url}`" class="d-flex align-items-center justify-content-center" @click="closeMenu();" type="button">
                                                     <div class="preIcon">
-                                                        <img class="lazyload" itemprop="image" :src="`../images/Header/${ item.category_url }.png`" :data-src="`/images/Header/${ item.category_url }.png`" :title="`Menu_icon_${item.category_url}`" :alt="`Menu_icon_${item.category_url}`" />
+                                                        <img class="lazyload" itemprop="image" :src="`/images/Header/${ item.category_url }.png`" :data-src="`/images/Header/${ item.category_url }.png`" :title="`Menu_icon_${item.category_url}`" :alt="`Menu_icon_${item.category_url}`" />
                                                     </div>
                                                     ${ item.category_name }
                                                 </NuxtLink>
@@ -73,7 +74,7 @@
                                             <div class="MainNav_Cat_Head" :id="`MainNav_Cat_Head_${index}`">
                                                 <NuxtLink :to="`/${item.category_url}`" class="d-flex align-items-center justify-content-center" @click="closeMenu();" type="button">
                                                     <div class="preIcon">
-                                                        <img class="lazyload" itemprop="image" :src="`../images/Header/${ item.category_url }.png`" :data-src="`/images/Header/${ item.category_url }.png`" :title="`Menu_icon_${item.category_url}`" :alt="`Menu_icon_${item.category_url}`" />
+                                                        <img class="lazyload" itemprop="image" :src="`/images/Header/${ item.category_url }.png`" :data-src="`/images/Header/${ item.category_url }.png`" :title="`Menu_icon_${item.category_url}`" :alt="`Menu_icon_${item.category_url}`" />
                                                     </div>
                                                     ${ item.category_name }
                                                 </NuxtLink>
@@ -91,13 +92,17 @@
 </template>
 
 <script setup lang="ts">
+const marqueeData = inject('marquee');
+const default_titleData = inject('default_title');
 
 //const { $bootstrap } = useNuxtApp();
 const router = useRouter().currentRoute.value;
 
 const DOM_Header_root = ref();
 const DOM_Header_logo = ref();
-const DOM_Header_mitem_top = ref();
+
+const DOM_Header_mitem_top_default = ref();
+const DOM_Header_mitem_top_marquee = ref();
 
 const DOM_MenuModule = ref();
 const DOM_MenuModule_paper = ref();
@@ -132,6 +137,11 @@ const MenuItemsData: any = $MenuItemsData;
     //pageData = toRaw(data.value);
     //console.log(toRaw(data.value));
 
+    const handleAnimationEnd = () => {
+        marqueeData.value.marquee = false;
+        console.log(marqueeData.value);
+        console.log('跑馬燈動畫已經結束');
+    };
 
 </script>
 
@@ -182,16 +192,22 @@ const MenuItemsData: any = $MenuItemsData;
             transition: all 0.3s ease-in-out;
         }
         .main_item {
-            flex-basis: 90%;
+            flex-basis: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            box-sizing: border-box;
+            width: 100%; /* 你可以根據需求調整寬度 */
+            text-align: center;
             .item_top {
-                transition: all 0.3s ease-in-out;
+                //transition: all 0.3s ease-in-out;
                 font-family: "Reggae One","ＫＯさきがけ龍爪Ｍ";
                 letter-spacing: 0rem;
                 font-size: 10rem;
                 text-align: center;
+                display: inline-block !important;
             }
-            .item_top {
-                display: block !important;
+            .top_marquee {
+                animation: marquee 10s linear 1; /* 調整動畫持續時間 */
             }
             .item_bottom {
                 .bottom_ul {
@@ -447,5 +463,14 @@ const MenuItemsData: any = $MenuItemsData;
     to {
         transform: translateX(-100%);
     }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%); /* 開始時在右側外部 */
+  }
+  100% {
+    transform: translateX(-100%); /* 結束時在左側外部 */
+  }
 }
 </style>
