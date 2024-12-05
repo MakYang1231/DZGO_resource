@@ -100,7 +100,7 @@
   </div>
   <!-- 影片標籤 -->
   <video id="fullscreenVideo" class="fullscreen-video d-none" controls ref="DOM_video">
-        <source src="/video/silver_adv.mov" type="video/mp4">
+        <source src="/video/silver_adv.MOV" type="video/mp4">
         您的瀏覽器不支援影片播放
   </video>      
 </template>

@@ -1,0 +1,61 @@
+{
+    "monthlyNum": "12",  
+    "rewardData": [
+      {
+        "level": "銀彈珠",
+        "title1": "月 銀彈珠精選補給包",
+        "title1_text": [
+          "30點數",
+          "30顆彈珠",
+          "可愛暖暖包 一入",
+          "精選氣泡水 一瓶",
+          "彈珠能量抽獎轉盤 一次"
+        ],
+        "title2": "銀彈珠升級能量包",
+        "title2_text": ["100點數", "100顆彈珠"]
+      },
+      {
+        "level": "黃金彈珠",
+        "title1": "月 黃金彈珠精選補給包",
+        "title1_text": [
+          "50點數",
+          "50顆彈珠",
+          "可愛暖暖包 一入",
+          "精選氣泡水 一瓶",
+          "彈珠能量抽獎轉盤 三次"
+        ],
+        "title2": "黃金彈珠菁英飛躍包",
+        "title2_text": ["300點數", "300顆彈珠", "菁英獎品 『限時限量』"]
+      },
+      {
+        "level": "鑽石彈珠",
+        "title1": "月 鑽石彈珠精選補給包",
+        "title1_text": [
+          "100點數",
+          "100顆彈珠",
+          "可愛暖暖包 一入",
+          "精選氣泡水 一瓶",
+          "彈珠能量抽獎轉盤 五次"
+        ],
+        "title2": "",
+        "title2_text": []
+      }
+    ],
+    "rewardPictureData": [
+      "images/reward/1.png",
+      "images/reward/2.png",
+      "images/reward/3.png",
+      "images/reward/4.png",
+      "images/reward/5.png",
+      "images/reward/6.png",
+      "images/reward/7.png",
+      "images/reward/8.png",
+      "images/reward/9.png",
+      "images/reward/10.png",
+      "images/reward/11.png",
+      "images/reward/12.png",
+      "images/reward/13.png",
+      "images/reward/14.png"
+    ]  
+}
+  
